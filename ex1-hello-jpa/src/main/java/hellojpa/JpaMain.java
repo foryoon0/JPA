@@ -1,5 +1,7 @@
 package hellojpa;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -23,8 +25,18 @@ public class JpaMain { //JPA의 모든 데이터 변경은 트랙잭션 안에�
 			//DELETE 쿼리
 			//em.remove(findMember);
 			
-			Member findMember = em.find(Member.class, 1L);
-			findMember.setName("HelloJPA");
+//			Member findMember = em.find(Member.class, 1L);
+			
+			// JPQL : 멤버 객체를 대상으로 쿼리를 진행함. 객체 지향 쿼리 (페이징 시 메리트있음)
+			List<Member> result = em.createQuery("select m from Member as m", Member.class)
+					.setFirstResult(5)
+					.setMaxResults(8)
+					.getResultList();	
+			
+			for(Member member : result) {
+				System.out.println("member.name=" + member.getName());
+			}
+			
 			
 			tx.commit();
 		} catch(Exception e) {
